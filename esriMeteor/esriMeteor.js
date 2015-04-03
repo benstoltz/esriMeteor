@@ -1,19 +1,42 @@
 if (Meteor.isClient) {
   // counter starts at 0
-  Session.setDefault('counter', 0);
+    Session.setDefault('counter', 0);
+    Template.newRoute.created = function() {
+        Modernizr.load([{
+            // Load common resorces
+            load: ['http://js.arcgis.com/3.11/'],
+            complete: function () {
+                require([
+                    "esri/urlUtils", "esri/map", "esri/dijit/Directions",
+                    "dojo/parser",
+                    "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dojo/domReady!"
+                ], function (Map) {
+                    //parser.parse();
+                    ////all requests to route.arcgis.com will proxy to the proxyUrl defined in this object.
+                    //urlUtils.addProxyRule({
+                    //    urlPrefix: "route.arcgis.com",
+                    //    proxyUrl: "/proxy/"
+                    //});
+                    //urlUtils.addProxyRule({
+                    //    urlPrefix: "traffic.arcgis.com",
+                    //    proxyUrl: "/proxy/"
+                    //});
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
-    }
-  });
+                    var map = new Map("map", {
+                        basemap: "streets",
+                        center: [-98.56, 39.82],
+                        zoom: 4
+                    });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
+                    //var directions = new Directions({
+                    //    map: map
+                    //}, "dir");
+                    //directions.startup();
+
+                });
+            }
+        }]);
+    };
 }
 
 if (Meteor.isServer) {
